@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/tv_View"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_weight="0.15"
+        android:gravity="center"
+        android:text="序号"/>
+
+    <TextView
+        android:id="@+id/tv_View1"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_weight="0.45"
+        android:gravity="center"
+        android:text="出库时间"/>
+
+    <TextView
+        android:id="@+id/tv_View2"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_weight="0.45"
+        android:gravity="center"
+        android:text="收货单位"/>
+
+    <TextView
+        android:id="@+id/tv_View3"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_weight="0.25"
+        android:gravity="center"
+        android:text="状态"/>
+
+    <TextView
+        android:id="@+id/tv_View4"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_weight="0.25"
+        android:gravity="center"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/tv_View5"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_weight="0.25"
+        android:gravity="center"
+        android:visibility="gone"/>
+
+</LinearLayout>

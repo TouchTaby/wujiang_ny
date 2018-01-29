@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/btnBack"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:background="@drawable/backbtn"/>
+
+        <TextView
+            android:id="@+id/tvTopName"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:background="@color/colorAccent"
+            android:gravity="center"
+            android:text="@string/app_login_title"
+            android:textAlignment="center"
+            android:textColor="@color/colorViewBackground"
+            android:textSize="25sp"/>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_rukucaozuo"
+            style="@style/mian_textview"
+            android:layout_weight="0.3"
+            android:drawableTop="@drawable/ru"
+            android:text="入库操作"/>
+
+        <TextView
+            android:id="@+id/tv_chukucaozuo"
+            style="@style/mian_textview"
+            android:layout_weight="0.3"
+            android:drawableTop="@drawable/chu"
+            android:text="出库操作"/>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_rukuchaxun"
+            style="@style/mian_textview"
+            android:layout_weight="0.3"
+            android:drawableTop="@drawable/cha"
+            android:text="入库查询"/>
+
+        <TextView
+            android:id="@+id/tv_chukuchaxun"
+            style="@style/mian_textview"
+            android:layout_weight="0.3"
+            android:drawableTop="@drawable/cha"
+            android:text="出库查询"/>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_wodexinxi"
+            style="@style/mian_textview"
+            android:layout_weight="0.3"
+            android:drawableTop="@drawable/information"
+            android:text="我的信息"/>
+
+
+        <TextView
+            style="@style/mian_textview"
+            android:layout_weight="0.3"/>
+    </LinearLayout>
+
+</LinearLayout>

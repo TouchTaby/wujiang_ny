@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/btnBack"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:background="@drawable/backbtn"/>
+
+        <TextView
+            android:id="@+id/tvTopName"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:background="@color/colorAccent"
+            android:gravity="center"
+            android:text="我的信息"
+            android:textAlignment="center"
+            android:textColor="@color/colorViewBackground"
+            android:textSize="25sp"/>
+    </RelativeLayout>
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorAccent">
+
+        <TableRow
+            style="@style/tablerow"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                style="@style/th_data"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:text="零售店名称："/>
+
+            <EditText
+                android:id="@+id/edt_xx_mingzi"
+                style="@style/edittext1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:focusable="false"/>
+
+        </TableRow>
+
+
+        <TableRow
+            style="@style/tablerow"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                style="@style/th_data"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:text="地址："/>
+
+            <EditText
+                android:id="@+id/edt_xx_dizhi"
+                style="@style/edittext1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:focusable="false"/>
+
+
+        </TableRow>
+
+
+        <TableRow
+            style="@style/tablerow"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                style="@style/th_data"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:text="经营许可证号："/>
+
+            <EditText
+                android:id="@+id/edt_xx_xukezheng"
+                style="@style/edittext1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:focusable="false"/>
+
+
+        </TableRow>
+
+
+        <TableRow
+            style="@style/tablerow"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                style="@style/th_data"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:text="许可证有效期："/>
+
+            <EditText
+                android:id="@+id/edt_xx_youxiaoqi"
+                style="@style/edittext1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:focusable="false"/>
+
+
+        </TableRow>
+
+        <TableRow
+            style="@style/tablerow"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                style="@style/th_data"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:text="系统使用期限："/>
+
+            <EditText
+                android:id="@+id/edt_xx_qixian"
+                style="@style/edittext1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:focusable="false"/>
+
+        </TableRow>
+
+
+    </TableLayout>
+
+</LinearLayout>
