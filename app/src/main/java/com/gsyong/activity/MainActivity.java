@@ -1,13 +1,12 @@
 package com.gsyong.activity;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -34,12 +33,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TextView tvRukuchaxun;
     private TextView tvChukuchaxun;
     private TextView tvWodexinxi;
-
+    private TextView tv_share;
     private Context context;
     private boolean isSend = true;//上传数据
     private Thread thread;//后台上传数据
     private WebServiceSyncDataBll webServiceSyncDataBll;
-
+    private Button bt_exit;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState)
     {
@@ -49,12 +48,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         context = MainActivity.this;
         webServiceSyncDataBll = new WebServiceSyncDataBll(context);
         initView();
-        if (ContextCompat.checkSelfPermission(this,android.Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED){
-            //先判断有没有权限 ，没有就在这里进行权限的申请
-            ActivityCompat.requestPermissions(MainActivity.this,
-                    new String[]{android.Manifest.permission.CAMERA},1);
-
-        }
+//        if (ContextCompat.checkSelfPermission(this,android.Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED){
+//            //先判断有没有权限 ，没有就在这里进行权限的申请
+//            ActivityCompat.requestPermissions(MainActivity.this,
+//                    new String[]{android.Manifest.permission.CAMERA},1);
+//
+//        }
         thread = new Thread(networkTask);
         thread.start();
     }
@@ -69,6 +68,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tvRukuchaxun = (TextView) findViewById(R.id.tv_rukuchaxun);
         tvChukuchaxun = (TextView) findViewById(R.id.tv_chukuchaxun);
         tvWodexinxi = (TextView) findViewById(R.id.tv_wodexinxi);
+        tv_share = findViewById(R.id.tv_share);
+        bt_exit = findViewById(R.id.bt_exit);
+        bt_exit.setOnClickListener(this);
+        tv_share.setOnClickListener(this);
         btnBack.setOnClickListener(this);
         tvRukucaozuo.setOnClickListener(this);
         tvChukucaozuo.setOnClickListener(this);
@@ -106,6 +109,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.btnBack:
                 finish();
+                break;
+            case R.id.tv_share:
+                //弹出二维码下载框
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setTitle("扫码下载APP：");
+                final View Dialogview = LayoutInflater.from(MainActivity.this).inflate(R.layout.share_app_dialog, null);
+                builder.setView(Dialogview);
+                builder.setNegativeButton("确定", null);
+                builder.show();
+                break;
+            case R.id.bt_exit:
+                System.exit(0);
                 break;
             default:
                 break;

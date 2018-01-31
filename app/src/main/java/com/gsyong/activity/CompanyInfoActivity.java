@@ -19,13 +19,13 @@ import commonutils.AppUtils;
  * 修改时间：2018/1/19 17:11
  * 修改备注：
  */
-public class CompanyInfoActivity extends AppCompatActivity
-{
+public class CompanyInfoActivity extends AppCompatActivity {
     EditText et_dizhi;
     EditText et_qixian;
     EditText et_mingchen;
     EditText et_youxiaoqi;
     EditText et_xukezheng;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,12 +37,32 @@ public class CompanyInfoActivity extends AppCompatActivity
         et_youxiaoqi = findViewById(R.id.edt_xx_youxiaoqi);
         Qiye_ZhucemaInfoBll qiye = new Qiye_ZhucemaInfoBll(this);
         dt_qiye dt_qiye = qiye.getQiYeInfo(AppUtils.getMacAddress());
-        et_dizhi.setText(dt_qiye.getDizhi());
-        et_mingchen.setText(dt_qiye.getMingzi());
+       String dizhi = dt_qiye.getDizhi();
+        if (dizhi.length() > 20) {
+            dizhi = dizhi.substring(0, 10) + "\n" + dizhi.substring(10, 20) + "\n" + dizhi.substring(20, dizhi.length());
+        } else if (dizhi.length() < 10) {
+            dizhi = dt_qiye.getDizhi();
+        } else if (dizhi.length() > 30) {
+            dizhi = dizhi.substring(0, 10) + "\n" + dizhi.substring(10, 20) + "\n" + dizhi.substring(20, 30) + "\n" + dizhi.substring(30, dizhi.length() - 1);
+        } else {
+            dizhi = dizhi.substring(0, 10) + "\n" + dizhi.substring(10, dizhi.length());
+
+        }
+        String mingzi = dt_qiye.getMingzi();
+        if (mingzi.length() > 20) {
+            mingzi = mingzi.substring(0, 10) + "\n" + mingzi.substring(10, 20) + "\n" + mingzi.substring(20, mingzi.length());
+        } else if (mingzi.length() < 10) {
+            mingzi = dt_qiye.getMingzi();
+        } else {
+            mingzi = mingzi.substring(0, 10) + "\n" + mingzi.substring(10, mingzi.length());
+        }
+        et_dizhi.setText(dizhi);
+        et_mingchen.setText(mingzi);
         et_youxiaoqi.setText(dt_qiye.getNyvld2());
         et_xukezheng.setText(dt_qiye.getNyxukehao());
         et_qixian.setText(dt_qiye.getYingyevld2());
     }
+
 }
 
 

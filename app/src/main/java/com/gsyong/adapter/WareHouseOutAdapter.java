@@ -74,7 +74,7 @@ public class WareHouseOutAdapter extends BaseAdapter
         viewHolder.tv_View1.setText(nowMdodel.getMingcheng());
         viewHolder.tv_View2.setText(String.valueOf(nowMdodel.getHanliang()));
         viewHolder.tv_View3.setText(String.valueOf(nowMdodel.getJianshu()));
-        viewHolder.tv_View4.setText(nowMdodel.getUid());
+        viewHolder.tv_View4.setText(nowMdodel.getYlint1()+"");
         viewHolder.tv_View5.setText(nowMdodel.getDaima());
 
         return convertView;

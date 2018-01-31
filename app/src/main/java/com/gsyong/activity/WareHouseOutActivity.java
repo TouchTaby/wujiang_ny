@@ -51,8 +51,7 @@ import commonutils.ToastUtils;
  * 修改备注：
  */
 public class WareHouseOutActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener,
-        AdapterView.OnItemLongClickListener
-{
+        AdapterView.OnItemLongClickListener {
     private Button btnBack;
     private TextView tvTopName;
     private EditText edtShouhuodanwei;
@@ -66,7 +65,7 @@ public class WareHouseOutActivity extends AppCompatActivity implements View.OnCl
     boolean scanning = false;
     private Handler outhandler = new Handler();
 
-
+    private boolean isCheckDanwei = false;
     private Context context;
     private WareHouseOutBll wareHouseOutBll;
     private WebServiceDataBll webServiceDataBll;
@@ -83,8 +82,7 @@ public class WareHouseOutActivity extends AppCompatActivity implements View.OnCl
     private String shouhuodanwei;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState)
-    {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         setContentView(R.layout.activity_warehouseout);
@@ -99,12 +97,10 @@ public class WareHouseOutActivity extends AppCompatActivity implements View.OnCl
         stateParm = this.getIntent().getIntExtra("state", 0);
         shouhuodanwei = this.getIntent().getStringExtra("shouhuodanwei");
 
-        if (uidParm != null)
-        {
+        if (uidParm != null) {
             now_chuku_list_uid = uidParm;
             edtShouhuodanwei.setText(shouhuodanwei);
-            if (stateParm > 0)
-            {
+            if (stateParm > 0) {
                 edtShouhuodanwei.setEnabled(false);
                 btnScan.setVisibility(View.GONE);
                 btnSave.setVisibility(View.GONE);
@@ -120,8 +116,7 @@ public class WareHouseOutActivity extends AppCompatActivity implements View.OnCl
     }
 
 
-    private void initView()
-    {
+    private void initView() {
         btnBack = (Button) findViewById(R.id.btnBack);
         tvTopName = (TextView) findViewById(R.id.tvTopName);
         edtShouhuodanwei = (EditText) findViewById(R.id.edtShouhuodanwei);
@@ -137,10 +132,18 @@ public class WareHouseOutActivity extends AppCompatActivity implements View.OnCl
         lstGoods.setAdapter(adapter);
         lstGoods.setOnItemClickListener(this);
         lstGoods.setOnItemLongClickListener(this);
+        edtShouhuodanwei.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    Log.e(TAG, "onFocusChange: "+"来了吗" );
+                    isCheckDanwei = hasFocus;
+                }
+            }
+        });
     }
 
-    private void initData()
-    {
+    private void initData() {
         now_chuku_cp_uid = "";//当前点击出库单的数据的ID
         now_chuku_list_uid = UUID.randomUUID().toString().toLowerCase().replace("-", "");//当前出库组ID
         dt_chuku_cp_allList.clear();
@@ -148,8 +151,7 @@ public class WareHouseOutActivity extends AppCompatActivity implements View.OnCl
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id)
-    {
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Intent intent = new Intent(getBaseContext(), WareHouseDetailActivity.class);
         now_chuku_cp_uid = dt_chuku_cp_allList.get(position).uid;
         intent.putExtra("daima", dt_chuku_cp_allList.get(position).daima);
@@ -162,30 +164,24 @@ public class WareHouseOutActivity extends AppCompatActivity implements View.OnCl
     }
 
     @Override
-    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id)
-    {
-        if (stateParm == 0)
-        {
+    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+        if (stateParm == 0) {
             final int fp3 = position;
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
             builder.setTitle("删除确认");
             builder.setMessage("您真的要删除这个记录吗？");
-            builder.setPositiveButton("确定", new DialogInterface.OnClickListener()
-            {
+            builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                 @Override
-                public void onClick(DialogInterface dialog, int which)
-                {
+                public void onClick(DialogInterface dialog, int which) {
                     dt_chuku_cp_allList.remove(fp3);
                     adapter.notifyDataSetChanged();
                     Toast.makeText(getBaseContext(), "删除成功", Toast.LENGTH_SHORT).show();
                 }
             });
             //    设置一个NegativeButton
-            builder.setNegativeButton("取消", new DialogInterface.OnClickListener()
-            {
+            builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
                 @Override
-                public void onClick(DialogInterface dialog, int which)
-                {
+                public void onClick(DialogInterface dialog, int which) {
                 }
             });
             builder.show();
@@ -195,12 +191,9 @@ public class WareHouseOutActivity extends AppCompatActivity implements View.OnCl
 
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        if (requestCode == san_Open || requestCode == click_Open)
-        {
-            if (resultCode == Activity.RESULT_OK)
-            {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == san_Open || requestCode == click_Open) {
+            if (resultCode == Activity.RESULT_OK) {
                 //得到新Activity 关闭后返回的数据
                 String daima = data.getExtras().getString("daima");
                 String mingzi = data.getExtras().getString("mingzi");
@@ -210,8 +203,7 @@ public class WareHouseOutActivity extends AppCompatActivity implements View.OnCl
                 Log.e(TAG, "onActivityResult: 名字：" + mingzi);
                 Log.e(TAG, "onActivityResult: 含量 ：" + hanliang);
                 Log.e(TAG, "onActivityResult: 件数：" + jianshu);
-                if (requestCode == san_Open)
-                {
+                if (requestCode == san_Open) {
                     dt_chuku_cp_all dt_chuku_cp_allModel = new dt_chuku_cp_all();
                     dt_chuku_cp_allModel.setUid(UUID.randomUUID().toString().toLowerCase().replace("-", ""));
                     dt_chuku_cp_allModel.setListuid(now_chuku_list_uid);
@@ -222,13 +214,10 @@ public class WareHouseOutActivity extends AppCompatActivity implements View.OnCl
                     dt_chuku_cp_allModel.setState(0);
                     dt_chuku_cp_allModel.setYlint1(Integer.parseInt(hanliang) * jianshu);
                     dt_chuku_cp_allList.add(dt_chuku_cp_allModel);
-                } else
-                {
-                    for (int i = 0; i < dt_chuku_cp_allList.size(); i++)
-                    {
+                } else {
+                    for (int i = 0; i < dt_chuku_cp_allList.size(); i++) {
                         dt_chuku_cp_all dt_chuku_cp_allModel = dt_chuku_cp_allList.get(i);
-                        if (dt_chuku_cp_allModel.getUid().equals(now_chuku_cp_uid))
-                        {
+                        if (dt_chuku_cp_allModel.getUid().equals(now_chuku_cp_uid)) {
                             dt_chuku_cp_allModel.setHanliang(hanliang);
                             dt_chuku_cp_allModel.setJianshu(jianshu);
                             dt_chuku_cp_allModel.setYlint1(Integer.parseInt(hanliang) * jianshu);
@@ -238,26 +227,19 @@ public class WareHouseOutActivity extends AppCompatActivity implements View.OnCl
                 }
                 adapter.notifyDataSetChanged();
             }
-        } else
-        {
+        } else {
             IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-            if (scanResult != null)
-            {
+            if (scanResult != null) {
                 String result = scanResult.getContents();
-                if (result != null)
-                {
-                    if (result.indexOf("http://") == 0 || result.indexOf("https://") == 0)
-                    {
+                if (result != null) {
+                    if (result.indexOf("http://") == 0 || result.indexOf("https://") == 0) {
                         Log.d("二维码", result);
-                        if (result.length() < 32)
-                        {
+                        if (result.length() < 32) {
                             Toast.makeText(getBaseContext(), result + "\n\n结果不符合二维码规格", Toast.LENGTH_LONG).show();
-                        } else
-                        {
+                        } else if (result.length() >= 32){
                             String daima = result.substring(result.length() - 32);
                             Log.d("二维码解析", daima);
-                            if (daima.length() < 11)
-                            {
+                            if (daima.length() < 11) {
                                 Toast.makeText(getBaseContext(), "产品代码不正确", Toast.LENGTH_SHORT).show();
                                 return;
                             }
@@ -265,8 +247,7 @@ public class WareHouseOutActivity extends AppCompatActivity implements View.OnCl
                             intent.putExtra("daima", daima);
                             startActivityForResult(intent, san_Open);
                         }
-                    } else
-                    {
+                    } else {
                         Toast.makeText(getBaseContext(), result + "\n\n结果不符合规范", Toast.LENGTH_LONG).show();
                     }
                 }
@@ -274,59 +255,53 @@ public class WareHouseOutActivity extends AppCompatActivity implements View.OnCl
         }
     }
 
-    private class ScanBack implements Barcode2DWithSoft.ScanCallback
-    {
+    private class ScanBack implements Barcode2DWithSoft.ScanCallback {
         @Override
-        public void onScanComplete(int i, int length, byte[] bytes)
-        {
+        public void onScanComplete(int i, int length, byte[] bytes) {
             String barCode = new String(bytes, 0, length);
             scanning = false;
             barcode2DWithSoft.stopScan();
             Log.e(TAG, "onScanComplete:-------------- " + barCode);
-            if (barCode != null)
-            {
-                if (barCode.indexOf("http://") == 0 || barCode.indexOf("https://") == 0)
-                {
+            if (barCode != null) {
+                if (barCode.indexOf("http://") == 0 || barCode.indexOf("https://") == 0) {
                     Log.d("二维码", barCode);
-                    if (barCode.length() < 32)
-                    {
+                    if (barCode.length() < 32) {
                         Toast.makeText(getBaseContext(), barCode + "\n\n结果不符合二维码规格", Toast.LENGTH_LONG).show();
-                    } else
-                    {
+                    } else if (barCode.length() >= 32) {
                         String daima = barCode.substring(barCode.length() - 32);
                         Log.e(TAG, "onScanComplete: 二维码：" + daima);
-                        if (daima.length() < 7)
-                        {
+                        if (daima.length() < 7) {
                             Toast.makeText(getBaseContext(), "产品代码不正确", Toast.LENGTH_SHORT).show();
                             return;
                         }
-                        //跳转到产品详细信息界面
-                        Intent intent = new Intent(getApplicationContext(), WareHouseDetailActivity.class);
-                        intent.putExtra("daima", daima);
-                        startActivityForResult(intent, san_Open);
+                        if (isCheckDanwei) {
+                            //如果点击了收货单位
+                            edtShouhuodanwei.setText(barCode);
+                        }else {
+                            //跳转到产品详细信息界面
+                            Intent intent = new Intent(getApplicationContext(), WareHouseDetailActivity.class);
+                            intent.putExtra("daima", daima);
+                            startActivityForResult(intent, san_Open);
+                        }
+
                     }
-                } else
-                {
+                } else {
                     Toast.makeText(getBaseContext(), barCode + "\n\n结果不符合规范", Toast.LENGTH_LONG).show();
                 }
             }
         }
     }
 
-    public class InitTask extends AsyncTask<String, Integer, Boolean>
-    {
+    public class InitTask extends AsyncTask<String, Integer, Boolean> {
         ProgressDialog mypDialog;
 
         @Override
-        protected Boolean doInBackground(String... params)
-        {
-            if (barcode2DWithSoft == null)
-            {
+        protected Boolean doInBackground(String... params) {
+            if (barcode2DWithSoft == null) {
                 barcode2DWithSoft = Barcode2DWithSoft.getInstance();
             }
             boolean reuslt = false;
-            if (barcode2DWithSoft != null)
-            {
+            if (barcode2DWithSoft != null) {
                 reuslt = barcode2DWithSoft.open(WareHouseOutActivity.this);
                 barcode2DWithSoft.setScanCallback(new ScanBack());
             }
@@ -335,27 +310,23 @@ public class WareHouseOutActivity extends AppCompatActivity implements View.OnCl
         }
 
         @Override
-        protected void onPostExecute(Boolean result)
-        {
+        protected void onPostExecute(Boolean result) {
             super.onPostExecute(result);
-            if (result)
-            {
-                Toast.makeText(WareHouseOutActivity.this, "Success", Toast.LENGTH_SHORT).show();
-            } else
-            {
-                Toast.makeText(WareHouseOutActivity.this, "fail", Toast.LENGTH_SHORT).show();
+            if (result) {
+                Toast.makeText(WareHouseOutActivity.this, "读头上电成功！", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(WareHouseOutActivity.this, "读头上电失败", Toast.LENGTH_SHORT).show();
             }
             mypDialog.cancel();
         }
 
         @Override
-        protected void onPreExecute()
-        {
+        protected void onPreExecute() {
             // TODO Auto-generated method stub
             super.onPreExecute();
             mypDialog = new ProgressDialog(WareHouseOutActivity.this);
             mypDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            mypDialog.setMessage("init...");
+            mypDialog.setMessage("初始化...");
             mypDialog.setCanceledOnTouchOutside(false);
             mypDialog.show();
         }
@@ -363,21 +334,17 @@ public class WareHouseOutActivity extends AppCompatActivity implements View.OnCl
     }
 
     @Override
-    protected void onDestroy()
-    {
+    protected void onDestroy() {
         Log.e(TAG, "onDestroy");
-        if (barcode2DWithSoft != null)
-        {
+        if (barcode2DWithSoft != null) {
             barcode2DWithSoft.stopScan();
             barcode2DWithSoft.close();
         }
         super.onDestroy();
     }
 
-    private void ScanBarcode()
-    {
-        if (barcode2DWithSoft != null && !scanning)
-        {
+    private void ScanBarcode() {
+        if (barcode2DWithSoft != null && !scanning) {
             Log.e(TAG, "ScanBarcode");
             scanning = true;
             barcode2DWithSoft.scan();
@@ -385,35 +352,29 @@ public class WareHouseOutActivity extends AppCompatActivity implements View.OnCl
     }
 
     @Override
-    protected void onStop()
-    {
+    protected void onStop() {
         super.onStop();
-        if (barcode2DWithSoft != null)
-        {
+        if (barcode2DWithSoft != null) {
             barcode2DWithSoft.close();//屏幕熄灭
         }
     }
 
     @Override
-    protected void onRestart()
-    {
+    protected void onRestart() {
         super.onRestart();
         lstGoods.requestFocus();
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
         if (imm.isActive()) {//如果开启
-            imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT,InputMethodManager.HIDE_NOT_ALWAYS);//关闭软键盘，开启方法相同，这个方法是切换开启与关闭状态的
+            imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS);//关闭软键盘，开启方法相同，这个方法是切换开启与关闭状态的
         }
         new InitTask().execute();//屏幕重新启动的时候初始化读头
     }
 
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event)
-    {
-        if (keyCode == 139)
-        {
-            if (event.getRepeatCount() == 0)
-            {
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == 139) {
+            if (event.getRepeatCount() == 0) {
                 ScanBarcode();
                 return true;
             }
@@ -422,10 +383,8 @@ public class WareHouseOutActivity extends AppCompatActivity implements View.OnCl
     }
 
     @Override
-    public void onClick(View v)
-    {
-        switch (v.getId())
-        {
+    public void onClick(View v) {
+        switch (v.getId()) {
             case R.id.btnScan:
                 //相机扫码
                 barcode2DWithSoft.close();//读头和摄像头不能同时打开
@@ -441,44 +400,41 @@ public class WareHouseOutActivity extends AppCompatActivity implements View.OnCl
                 break;
             case R.id.btnSave:
             case R.id.btnSubmit:
-
-                dt_chuku_list_allModel.setUid(now_chuku_list_uid);
-                dt_chuku_list_allModel.setAddtime(DateUtils.getCurrentDateEN());
-                dt_chuku_list_allModel.setBianhao(DateUtils.getCurrentDateNumber());
-                dt_chuku_list_allModel.setQiyeid(Sysconfig.qiyeId);
-                dt_chuku_list_allModel.setShuliang(dt_chuku_cp_allList.size());
-                dt_chuku_list_allModel.setQystaff("android");
-                dt_chuku_list_allModel.setShouhuodanwei(edtShouhuodanwei.getText().toString());
-                if (v.getId() == R.id.btnSave)
-                {
-                    dt_chuku_list_allModel.setState(0);
-                    wareHouseOutBll.add_chuku_Info(dt_chuku_cp_allList, dt_chuku_list_allModel);
-                    if (uidParm != null || dt_chuku_cp_allList.size() > 0)
-                    {
-                        ToastUtils.showShort(context, "数据已保存");
-                    }
-                } else
-                {
-                    dt_chuku_list_allModel.setState(1);
-                    for (int i = 0; i < dt_chuku_cp_allList.size(); i++)
-                    {
-                        dt_chuku_cp_allList.get(i).setState(1);
-                    }
-                    wareHouseOutBll.add_chuku_Info(dt_chuku_cp_allList, dt_chuku_list_allModel);
-                    if (uidParm != null || dt_chuku_cp_allList.size() > 0)
-                    {
-                        ToastUtils.showShort(context, "数据已提交");
-                    }
-                    if (uidParm != null)
-                    {
-                        finish();
-                    } else
-                    {
-                        initData();
-                        edtShouhuodanwei.setText("");
-                        adapter.notifyDataSetChanged();
+                if (edtShouhuodanwei.getText().toString().equals("")) {
+                    Toast.makeText(getApplicationContext(),"收货单位不得为空！",Toast.LENGTH_SHORT).show();
+                }else {
+                    dt_chuku_list_allModel.setUid(now_chuku_list_uid);
+                    dt_chuku_list_allModel.setAddtime(DateUtils.getCurrentDateEN());
+                    dt_chuku_list_allModel.setBianhao(DateUtils.getCurrentDateNumber());
+                    dt_chuku_list_allModel.setQiyeid(Sysconfig.qiyeId);
+                    dt_chuku_list_allModel.setShuliang(dt_chuku_cp_allList.size());
+                    dt_chuku_list_allModel.setQystaff("android");
+                    dt_chuku_list_allModel.setShouhuodanwei(edtShouhuodanwei.getText().toString());
+                    if (v.getId() == R.id.btnSave) {
+                        dt_chuku_list_allModel.setState(0);
+                        wareHouseOutBll.add_chuku_Info(dt_chuku_cp_allList, dt_chuku_list_allModel);
+                        if (uidParm != null || dt_chuku_cp_allList.size() > 0) {
+                            ToastUtils.showShort(context, "数据已保存");
+                        }
+                    } else {
+                        dt_chuku_list_allModel.setState(1);
+                        for (int i = 0; i < dt_chuku_cp_allList.size(); i++) {
+                            dt_chuku_cp_allList.get(i).setState(1);
+                        }
+                        wareHouseOutBll.add_chuku_Info(dt_chuku_cp_allList, dt_chuku_list_allModel);
+                        if (uidParm != null || dt_chuku_cp_allList.size() > 0) {
+                            ToastUtils.showShort(context, "数据已提交");
+                        }
+                        if (uidParm != null) {
+                            finish();
+                        } else {
+                            initData();
+                            edtShouhuodanwei.setText("");
+                            adapter.notifyDataSetChanged();
+                        }
                     }
                 }
+
                 break;
             case R.id.btnBack:
                 finish();
@@ -490,33 +446,26 @@ public class WareHouseOutActivity extends AppCompatActivity implements View.OnCl
 
 
     @Override
-    public boolean dispatchTouchEvent(MotionEvent ev)
-    {
-        if (ev.getAction() == MotionEvent.ACTION_DOWN)
-        {
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
             View v = getCurrentFocus();
-            if (isShouldHideInput(v, ev))
-            {
+            if (isShouldHideInput(v, ev)) {
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                if (imm != null && imm.isActive())
-                {
+                if (imm != null && imm.isActive()) {
                     imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                 }
             }
             return super.dispatchTouchEvent(ev);
         }
         // 必不可少，否则所有的组件都不会有TouchEvent了
-        if (getWindow().superDispatchTouchEvent(ev))
-        {
+        if (getWindow().superDispatchTouchEvent(ev)) {
             return true;
         }
         return onTouchEvent(ev);
     }
 
-    public boolean isShouldHideInput(View v, MotionEvent event)
-    {
-        if (v != null && (v instanceof EditText))
-        {
+    public boolean isShouldHideInput(View v, MotionEvent event) {
+        if (v != null && (v instanceof EditText)) {
             int[] leftTop = {0, 0};
             //获取输入框当前的location位置
             v.getLocationInWindow(leftTop);
@@ -524,12 +473,10 @@ public class WareHouseOutActivity extends AppCompatActivity implements View.OnCl
             int top = leftTop[1];
             int bottom = top + v.getHeight();
             int right = left + v.getWidth();
-            if (event.getX() > left && event.getX() < right && event.getY() > top && event.getY() < bottom)
-            {
+            if (event.getX() > left && event.getX() < right && event.getY() > top && event.getY() < bottom) {
                 // 点击的是输入框区域，保留点击EditText的事件
                 return false;
-            } else
-            {
+            } else {
                 return true;
             }
         }

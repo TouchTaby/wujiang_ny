@@ -3,6 +3,8 @@ package com.gsyong.activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -14,6 +16,8 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.gsyong.R;
 import com.gsyong.bll.Qiye_ZhucemaInfoBll;
@@ -44,11 +48,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private CheckBox chkRememberName;
     private CheckBox chkRememberPwd;
     private Button btnLogin;
-
+    private TextView tv_version;
     private Context context;
     private Dialog mDialog;
     private Qiye_ZhucemaInfoBll qiye_zhucemaInfoBll;
-
+    private dt_qiye dt_qiyeModel;
     private Handler mHandler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
@@ -93,11 +97,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private void initView() {
         edtName = findViewById(R.id.edtName);
-        btnSelect = findViewById(R.id.btnSelect);
         edtPwd = findViewById(R.id.edtPwd);
         chkRememberName = findViewById(R.id.chkRememberName);
         chkRememberPwd = findViewById(R.id.chkRememberPwd);
         btnLogin = findViewById(R.id.btnLogin);
+        tv_version = findViewById(R.id.tv_version);
+        try {
+            PackageInfo pi=context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+            tv_version.setText("软件版本："+pi.versionName);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
 
         btnLogin.setOnClickListener(this);
     }
@@ -105,12 +115,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onStart() {
         super.onStart();
-        dt_qiye dt_qiyeModel = qiye_zhucemaInfoBll.getQiYeInfo(AppUtils.getMacAddress());
+        dt_qiyeModel = qiye_zhucemaInfoBll.getQiYeInfo(AppUtils.getMacAddress());
         if (dt_qiyeModel != null) {
             Sysconfig.qiyeId = Integer.parseInt(dt_qiyeModel.getId());
             edtName.setText(dt_qiyeModel.getMingzi());
             edtPwd.setText(dt_qiyeModel.getMima());
-
         } else {
             mDialog = WeiboDialogUtils.createLoadingDialog(context, "正在获取注册信息...");
             new Thread(networkTask).start();
@@ -130,9 +139,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 Sysconfig.qiyemingzi = edtName.getText().toString().trim();
                 Sysconfig.qiyemima = edtPwd.getText().toString().trim();
                 Sysconfig.qiyemimaMd5 = getMD5(edtPwd.getText().toString().trim());
+                if(edtName.getText().equals("")){
+                    Toast.makeText(getApplicationContext(),"企业名称不能为空！",Toast.LENGTH_SHORT).show();
+                }else if(edtPwd.getText()==null){
+                    Toast.makeText(getApplicationContext(),"企业密码不能为空！",Toast.LENGTH_SHORT).show();
+                }else if (!(edtName.getText().toString().equals(dt_qiyeModel.getMingzi()))){
+                    Toast.makeText(getApplicationContext(),"企业名称错误！",Toast.LENGTH_SHORT).show();
+                }else if (!(edtPwd.getText().toString().equals(dt_qiyeModel.getMima()))){
+                    Toast.makeText(getApplicationContext(),"企业密码错误！",Toast.LENGTH_SHORT).show();
+                }else {
+                    Intent intent = new Intent(this, MainActivity.class);
+                    startActivity(intent);
+                }
 
-                Intent intent = new Intent(this, MainActivity.class);
-                startActivity(intent);
                 break;
             default:
                 break;

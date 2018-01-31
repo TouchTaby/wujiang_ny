@@ -78,7 +78,6 @@ public class WareHouseDetailActivity extends AppCompatActivity implements View.O
         hanliang = this.getIntent().getStringExtra("hanliang");
         jianshu = this.getIntent().getStringExtra("jianshu");
         stateParm = this.getIntent().getIntExtra("state", 0);
-
         Log.e(TAG, "onCreate: 从上一界面获取到代码：" + result_daima);
         dt_goodsModel = goodsBll.getGoodsInfo(result_daima.substring(0, 11));
         if (hanliang == null)//说明是扫描开启的
@@ -120,6 +119,22 @@ public class WareHouseDetailActivity extends AppCompatActivity implements View.O
         btnSubmit = (Button) findViewById(R.id.btnSubmit);
         btnBack.setOnClickListener(this);
         btnSubmit.setOnClickListener(this);
+        edtCpJianshu.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    edtCpJianshu.setText("");
+                }
+            }
+        });
+        edtCpHanliang.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    edtCpHanliang.setText("");
+                }
+            }
+        });
     }
 
     @Override
@@ -135,6 +150,12 @@ public class WareHouseDetailActivity extends AppCompatActivity implements View.O
                 jixing = edtCpJixing.getText().toString();
                 hanliang = edtCpHanliang.getText().toString();
                 jianshu = edtCpJianshu.getText().toString();
+                if (hanliang .equals("")) {
+                    Toast.makeText(getApplicationContext(),"含量不能为空！",Toast.LENGTH_SHORT).show();
+                }
+                if (jianshu .equals("")) {
+                    Toast.makeText(getApplicationContext(),"件数不能为空！",Toast.LENGTH_SHORT).show();
+                }
                 Intent intent = new Intent();
                 intent.putExtra("daima", result_daima);
                 intent.putExtra("mingzi", mingzi);
@@ -146,6 +167,7 @@ public class WareHouseDetailActivity extends AppCompatActivity implements View.O
             case R.id.btnBack:
                 finish();
                 break;
+
             default:
                 break;
         }
@@ -193,11 +215,11 @@ public class WareHouseDetailActivity extends AppCompatActivity implements View.O
         {
             edtCpHanliang.setText(hanliang);
             edtCpJianshu.setText(jianshu);
-        } else
-        {
+        }else {
             edtCpHanliang.setText("1");
             edtCpJianshu.setText("1");
         }
+
     }
 
     Runnable networkTask_getchanpin = new Runnable()

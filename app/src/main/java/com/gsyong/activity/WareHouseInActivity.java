@@ -195,7 +195,7 @@ public class WareHouseInActivity extends AppCompatActivity implements View.OnCli
                     Log.d("二维码", barCode);
                     if (barCode.length() < 32) {
                         Toast.makeText(getBaseContext(), barCode + "\n\n结果不符合二维码规格", Toast.LENGTH_LONG).show();
-                    } else {
+                    } else if (barCode.length() >= 32){
                         String daima = barCode.substring(barCode.length() - 32);
                         Log.e(TAG, "onScanComplete: 二维码：" + daima);
                         if (daima.length() < 7) {
@@ -235,9 +235,9 @@ public class WareHouseInActivity extends AppCompatActivity implements View.OnCli
         protected void onPostExecute(Boolean result) {
             super.onPostExecute(result);
             if (result) {
-                Toast.makeText(WareHouseInActivity.this, "Success", Toast.LENGTH_SHORT).show();
+                Toast.makeText(WareHouseInActivity.this, "读头上电成功！", Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(WareHouseInActivity.this, "fail", Toast.LENGTH_SHORT).show();
+                Toast.makeText(WareHouseInActivity.this, "读头上电失败", Toast.LENGTH_SHORT).show();
             }
             mypDialog.cancel();
         }
@@ -248,11 +248,10 @@ public class WareHouseInActivity extends AppCompatActivity implements View.OnCli
             super.onPreExecute();
             mypDialog = new ProgressDialog(WareHouseInActivity.this);
             mypDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            mypDialog.setMessage("init...");
+            mypDialog.setMessage("初始化...");
             mypDialog.setCanceledOnTouchOutside(false);
             mypDialog.show();
         }
-
     }
 
     @Override
@@ -348,7 +347,7 @@ public class WareHouseInActivity extends AppCompatActivity implements View.OnCli
                         Log.d("二维码", result);
                         if (result.length() < 32) {
                             Toast.makeText(getBaseContext(), result + "\n\n结果不符合二维码规格", Toast.LENGTH_LONG).show();
-                        } else {
+                        } else if (result.length() >= 32){
                             String daima = result.substring(result.length() - 32);
                             Log.d("二维码解析", daima);
                             if (daima.length() < 11) {

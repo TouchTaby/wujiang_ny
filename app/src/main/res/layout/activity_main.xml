@@ -24,6 +24,7 @@
             android:textAlignment="center"
             android:textColor="@color/colorViewBackground"
             android:textSize="25sp"/>
+
     </RelativeLayout>
 
     <LinearLayout
@@ -84,8 +85,19 @@
 
 
         <TextView
+            android:id="@+id/tv_share"
+            android:text="app分享"
+            android:drawableTop="@drawable/share"
             style="@style/mian_textview"
             android:layout_weight="0.3"/>
     </LinearLayout>
+    <Button
+        android:background="@drawable/shape"
+        android:layout_margin="44dp"
+        android:id="@+id/bt_exit"
+        android:textSize="18sp"
+        android:text="退 出"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

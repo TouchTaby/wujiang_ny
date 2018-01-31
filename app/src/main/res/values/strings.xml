@@ -5,7 +5,7 @@
     <string name="Webservice_Url_mobileinterface">http://aqjc.china1908.com/ajax/mobileinterface.ashx</string>
     <string name="Webservice_Url_nongyao">http://ny.gsyong.com/ajax/mobileAPP.ashx</string>
     <!--<string name="Webservice_Url_nongyao">http://ny.gsyong.com/WebService.asmx</string>-->
-    <string name="app_login_title">农药管理系统</string>
+    <string name="app_login_title">农药出入库管理</string>
 
     <string-array name="wareHouseOutState">
         <item>全部</item>

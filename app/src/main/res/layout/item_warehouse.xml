@@ -37,12 +37,12 @@
         android:text="件数"/>
 
     <TextView
+        android:text="总数"
         android:id="@+id/tv_View4"
         android:layout_width="0dp"
         android:layout_height="40dp"
         android:layout_weight="0.25"
-        android:gravity="center"
-        android:visibility="gone"/>
+        android:gravity="center" />
 
     <TextView
         android:id="@+id/tv_View5"
