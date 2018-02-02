@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -136,7 +137,7 @@ public class WareHouseOutActivity extends AppCompatActivity implements View.OnCl
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-                    Log.e(TAG, "onFocusChange: "+"来了吗" );
+                    Log.e(TAG, "onFocusChange: " + "来了吗");
                     isCheckDanwei = hasFocus;
                 }
             }
@@ -236,7 +237,7 @@ public class WareHouseOutActivity extends AppCompatActivity implements View.OnCl
                         Log.d("二维码", result);
                         if (result.length() < 32) {
                             Toast.makeText(getBaseContext(), result + "\n\n结果不符合二维码规格", Toast.LENGTH_LONG).show();
-                        } else if (result.length() >= 32){
+                        } else if (result.length() >= 32) {
                             String daima = result.substring(result.length() - 32);
                             Log.d("二维码解析", daima);
                             if (daima.length() < 11) {
@@ -264,26 +265,30 @@ public class WareHouseOutActivity extends AppCompatActivity implements View.OnCl
             Log.e(TAG, "onScanComplete:-------------- " + barCode);
             if (barCode != null) {
                 if (barCode.indexOf("http://") == 0 || barCode.indexOf("https://") == 0) {
+                    String endcode = barCode.substring(barCode.lastIndexOf("/") + 1, barCode.length());
                     Log.d("二维码", barCode);
                     if (barCode.length() < 32) {
                         Toast.makeText(getBaseContext(), barCode + "\n\n结果不符合二维码规格", Toast.LENGTH_LONG).show();
-                    } else if (barCode.length() >= 32) {
+                    } else if (endcode.length() >= 32) {
                         String daima = barCode.substring(barCode.length() - 32);
                         Log.e(TAG, "onScanComplete: 二维码：" + daima);
                         if (daima.length() < 7) {
                             Toast.makeText(getBaseContext(), "产品代码不正确", Toast.LENGTH_SHORT).show();
                             return;
                         }
-                        if (isCheckDanwei) {
-                            //如果点击了收货单位
-                            edtShouhuodanwei.setText(barCode);
-                        }else {
+                        if (barCode.contains("=")) {
+                            String danwei = barCode.substring(barCode.lastIndexOf("=") + 1, barCode.length());
+                            edtShouhuodanwei.setText(danwei);
+                            handler.sendEmptyMessage(1);
+                            edtShouhuodanwei.setFocusable(false);
+                        } else if (barCode.contains("nyfw.gsyong.com")) {
                             //跳转到产品详细信息界面
                             Intent intent = new Intent(getApplicationContext(), WareHouseDetailActivity.class);
                             intent.putExtra("daima", daima);
                             startActivityForResult(intent, san_Open);
+                        } else {
+                            Toast.makeText(getBaseContext(), barCode + "\n\n结果不符合规范", Toast.LENGTH_LONG).show();
                         }
-
                     }
                 } else {
                     Toast.makeText(getBaseContext(), barCode + "\n\n结果不符合规范", Toast.LENGTH_LONG).show();
@@ -291,6 +296,21 @@ public class WareHouseOutActivity extends AppCompatActivity implements View.OnCl
             }
         }
     }
+
+    Handler handler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            if (msg.what == 1) {
+                InputMethodManager manager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                if (manager != null) {
+                    Log.e(TAG, "handleMessage: " );
+                    manager.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+                }
+            }
+            return false;
+        }
+    });
+
 
     public class InitTask extends AsyncTask<String, Integer, Boolean> {
         ProgressDialog mypDialog;
@@ -401,8 +421,8 @@ public class WareHouseOutActivity extends AppCompatActivity implements View.OnCl
             case R.id.btnSave:
             case R.id.btnSubmit:
                 if (edtShouhuodanwei.getText().toString().equals("")) {
-                    Toast.makeText(getApplicationContext(),"收货单位不得为空！",Toast.LENGTH_SHORT).show();
-                }else {
+                    Toast.makeText(getApplicationContext(), "收货单位不得为空！", Toast.LENGTH_SHORT).show();
+                } else {
                     dt_chuku_list_allModel.setUid(now_chuku_list_uid);
                     dt_chuku_list_allModel.setAddtime(DateUtils.getCurrentDateEN());
                     dt_chuku_list_allModel.setBianhao(DateUtils.getCurrentDateNumber());
